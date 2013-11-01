@@ -9,10 +9,30 @@
 #define QKWP2000_EXPORT Q_DECL_IMPORT
 #endif
 
-#define FEND 0xC0
-#define FESC 0xDB
-#define TFEND 0xDC
-#define TFESC 0xDD
+/* Idetifiers. Reply code is code+40 */
+#define startCommunication			0x81
+#define stopCommunication			0x82
+#define startDiagnosticSession			0x10
+#define stopDiagnosticSession			0x20
+#define ecuReset				0x11
+#define clearDiagnosticInformation		0x14
+#define	readDiagnosticTroubleCodesByStatus	0x18
+#define readEcuIdentification			0x1a
+#define readDataByLocalIdentifier		0x21
+#define readMemoryByAddress			0x23
+#define inputOutputControlByLocalIdentifier	0x30
+#define writeDataByLocalIdentifier		0x3b
+#define testerPresent				0x3e
+
+/* Reply codes */
+#define generalReject			0x10
+#define serviceNotSupported		0x11
+#define subFunctionNotSupported 	0x12
+#define busy-RepeatRequest		0x21
+#define requestOutOfRange		0x31
+#define transferAborted			0x72
+#define blockTransferDataChecksumError	0x77
+
 
 class QKWP2000_EXPORT QKWP2000 : public QObject
 {
