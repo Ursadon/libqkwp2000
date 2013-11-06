@@ -54,9 +54,9 @@ QByteArray QKWP2000::createpacket(unsigned char cmd, QByteArray data) {
     unsigned char checksum = 0;
 
     if(data.size() < 64) {
-        packet.prepend(0x80 + data.size());
+        packet.prepend(0x80 + 1 + data.size());
     } else if (data.size() < 128) {
-	packet.prepend(0x80);
+	packet.prepend(0x80 + 1);
 	packet.append(data.size());
     } else {
         return 0;
