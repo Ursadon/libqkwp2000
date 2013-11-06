@@ -49,8 +49,44 @@ void QKWP2000::test() {
  * @param data A QByteArray of data to send
  * @return QByteArray with data in wake packet
  */
-QByteArray QKWP2000::createpacket(unsigned char address, unsigned char cmd, QByteArray data) {
-    return 0;
+QByteArray QKWP2000::createpacket(unsigned char cmd, QByteArray data) {
+    QByteArray packet;
+    unsigned char checksum = 0;
+
+    if(data.size() < 64) {
+        packet.prepend(0x80 + data.size());
+    } else if (data.size() < 128) {
+	packet.prepend(0x80);
+	packet.append(data.size());
+    } else {
+        return 0;
+    }
+    packet.append(MSG_TARGET);
+    packet.append(MSG_SRC);
+    packet.append(cmd);
+    packet.append(data);
+    foreach(unsigned char byte, packet) {
+        checksum += byte;
+    }
+    packet.append(checksum);
+
+    return packet;
+}
+
+QByteArray QKWP2000::createpacket(unsigned char cmd) {
+    QByteArray packet;
+    unsigned char checksum = 0;
+
+    packet.prepend(0x81);
+    packet.append(MSG_TARGET);
+    packet.append(MSG_SRC);
+    packet.append(cmd);
+    foreach(unsigned char byte, packet) {
+        checksum += byte;
+    }
+    packet.append(checksum);
+
+    return packet;
 }
 
 /**
@@ -63,9 +99,6 @@ int QKWP2000::getpacket(QByteArray data) {
     return 0;
 }
 
-unsigned int QKWP2000::getcrc(QByteArray data) {
-    return 0;
-}
 
 /**
  * Print packet
