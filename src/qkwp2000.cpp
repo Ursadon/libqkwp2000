@@ -30,6 +30,7 @@
 QKWP2000::QKWP2000()
 {
     qDebug() << "[libQKWP2000][INFO]: QKWP2000 module loaded" << endl;
+    rx_packet = 0;
 }
 
 QKWP2000::~QKWP2000()
@@ -95,6 +96,16 @@ QByteArray QKWP2000::createpacket(unsigned char cmd) {
  * @return No return
  */
 int QKWP2000::getpacket(QByteArray data) {
+    int num_of_bytes = 0;
+    foreach (unsigned char rx_byte, data) {
+	rx_packet.append(rx_byte);        
+    }
+    if(rx_packet.size() >= 3) {
+	num_of_bytes = rx_packet.at(0) - 0x80;
+	if (rx_packet.size() >= num_of_bytes) {
+            dump_packet(rx_packet);
+        }
+    }    
     return 0;
 }
 
@@ -105,5 +116,36 @@ int QKWP2000::getpacket(QByteArray data) {
  * @param packet QByteArray wake packet
  */
 void QKWP2000::dump_packet(QByteArray packet) {
+    QString hexdata;
+    unsigned int num_of_bytes = packet.at(0) - 0x80;
+    unsigned int header = packet.at(0);
+    unsigned int target = packet.at(1);
+    unsigned int source = packet.at(2);
+    unsigned int cmd = packet.at(3);
+    QByteArray data = packet.mid(4,num_of_bytes);
+//    unsigned int actual_crc = packet.at(4+packet.size());
 
+    unsigned int i = 0;
+   foreach(unsigned char c, data) {
+        hexdata += "0x";
+        hexdata += QString::number(c,16).toUpper();
+        hexdata += " ";
+        if (i == 7) {
+            hexdata += "\n";
+            i = 0;
+        } else {
+            i++;
+        }
+    }
+    qDebug()
+            << "---------------------------------------" << endl
+            << "[QKWP2000][INFO]: Received packet" << endl
+            << "TARGET:\t\t" << QString::number(static_cast<unsigned char>(target)) << endl
+            << "SOURCE:\t\t" << QString::number(static_cast<unsigned char>(source)) << endl
+            << "CMD:\t\t" << QString::number(static_cast<unsigned char>(cmd)) << endl
+            << "DATA (raw):\t\t" << endl
+            << qPrintable(QString(data)) << endl
+            << "DATA (hex):\t\t" << endl
+            << qPrintable(QString(hexdata)) << endl
+            << "---------------------------------------" << endl;
 }

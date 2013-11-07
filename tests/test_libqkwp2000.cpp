@@ -55,16 +55,18 @@ void Test_libqkwp2000::kwp_test_tx_full()
     QCOMPARE(kwp->createpacket((unsigned char)readDataByLocalIdentifier, message), packet);
 }
 
-/*
+
 void Test_libqkwp2000::lwp_test_rx()
 {
-    Wakeproto *lwp = new Wakeproto;
-    QSignalSpy stateSpy(lwp, SIGNAL( packetReceived(QByteArray) ) );
-    QByteArray packet = lwp->createpacket(201,2,"senddata");
-    QVERIFY( stateSpy.isValid() );
-    lwp->getpacket(packet);
-    QCOMPARE( stateSpy.count(), 1 );
+    QKWP2000 *kwp = new QKWP2000;
+    QByteArray packet;
+    const unsigned char data[] = {0x82, 0x10, 0xf1, 0x21, 0x01, 0xa5};
+
+    packet = QByteArray::fromRawData((char*)data, 6);
+    kwp->getpacket(packet);
 }
+
+/*
 void Test_libqkwp2000::lwp_test_rx_continuous()
 {
     Wakeproto *lwp = new Wakeproto;

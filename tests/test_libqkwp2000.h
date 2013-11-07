@@ -17,7 +17,7 @@ public slots:
 private slots: // must be private
     void kwp_test_tx_short();
     void kwp_test_tx_full();
-//    void lwp_test_rx();
+    void lwp_test_rx();
 //    void lwp_test_rx_continuous();
 //    void lwp_test_rx_bruteforce();
 };
