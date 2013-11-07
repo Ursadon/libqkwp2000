@@ -44,10 +44,9 @@ void QKWP2000::test() {
 /**
  * Create packet, based on input data
  *
- * @param address Destanation device address
  * @param cmd Command number
  * @param data A QByteArray of data to send
- * @return QByteArray with data in wake packet
+ * @return QByteArray with data in KWP packet
  */
 QByteArray QKWP2000::createpacket(unsigned char cmd, QByteArray data) {
     QByteArray packet;
@@ -106,4 +105,5 @@ int QKWP2000::getpacket(QByteArray data) {
  * @param packet QByteArray wake packet
  */
 void QKWP2000::dump_packet(QByteArray packet) {
+
 }
